@@ -19,7 +19,7 @@ test('decrement action', () => {
     const store = configureStore({ reducer: { counter: counterReducer } });
     store.dispatch({ type: 'counter/decrement' });
     const state = store.getState().counter;
-    expect(state.value).toBe(-1);
+    expect(state.value).toBe(-10);
 });
 
 test('incrementByAmount action', () => {

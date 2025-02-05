@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer, { incrementByAmount } from './counterSlice';
+import counterReducer, { incrementByAmount } from './counterSliceRedux';
 
 test('initial state', () => {
     const store = configureStore({ reducer: { counter: counterReducer } });
@@ -19,7 +19,7 @@ test('decrement action', () => {
     const store = configureStore({ reducer: { counter: counterReducer } });
     store.dispatch({ type: 'counter/decrement' });
     const state = store.getState().counter;
-    expect(state.value).toBe(-10);
+    expect(state.value).toBe(-1);
 });
 
 test('incrementByAmount action', () => {

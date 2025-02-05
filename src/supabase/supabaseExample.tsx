@@ -11,7 +11,6 @@ interface SupabaseTableTest {
 
 function SupabaseExample() {
   const [data, setData] = useState<SupabaseTableTest[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
   const [loading, setLoading] = useState(true);
 

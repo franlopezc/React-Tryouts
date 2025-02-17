@@ -95,3 +95,7 @@ export type ThemeContent = {
   theme: ThemeVariant;
   setTheme: (c: ThemeVariant) => void;
 };
+
+export interface NavbarProps {
+  theme: boolean;
+}

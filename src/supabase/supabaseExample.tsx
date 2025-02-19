@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import supabase from './supabaseClient';
+import { useEffect, useState } from "react";
+import supabase from "./supabaseClient";
 
 interface SupabaseTableTest {
   id: number;
-  name: string
-  age: number
-  state: string
+  name: string;
+  age: number;
+  state: string;
 }
-
 
 function SupabaseExample() {
   const [data, setData] = useState<SupabaseTableTest[]>([]);
@@ -22,17 +21,16 @@ function SupabaseExample() {
         .select();
 
       if (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       } else {
         setData(data);
       }
       setLoading(false);
-      console.log(data + " " + error)
+      console.log(data + " " + error);
     }
 
     fetchData();
   }, []);
-
 
   if (loading) return <p>Loading...</p>;
   return (

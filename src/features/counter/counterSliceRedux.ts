@@ -1,14 +1,14 @@
 // src/features/counter/counterSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface CounterState {
+export interface CounterState {
   value: number;
-  papa: string
+  papa: string;
 }
 
 const initialState: CounterState = {
   value: 0,
-  papa: "hola"
+  papa: 'hola',
 };
 
 const counterSlice = createSlice({
@@ -31,6 +31,7 @@ const counterSlice = createSlice({
   },
 });
 
-export const { increment, decrement, incrementByAmount,decrementByAmount } = counterSlice.actions;
+export const { increment, decrement, incrementByAmount, decrementByAmount } =
+  counterSlice.actions;
 
 export default counterSlice.reducer;

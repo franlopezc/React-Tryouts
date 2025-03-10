@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { cityCountry } from '../helpers/constantHelper';
-import { WeatherAPI } from '../components/WeatherAPI';
+import WeatherAPI from '../components/WeatherAPI';
 
 export default function Home() {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);

@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import supabase from './supabaseClient';
 
 interface SupabaseTableTest {
   id: number;
-  name: string
-  age: number
-  state: string
+  name: string;
+  age: number;
+  state: string;
 }
-
 
 function SupabaseExample() {
   const [data, setData] = useState<SupabaseTableTest[]>([]);
@@ -17,7 +16,7 @@ function SupabaseExample() {
   useEffect(() => {
     async function fetchData() {
       const { data, error } = await supabase
-        .from("Test") // Replace with your table name
+        .from('Test') // Replace with your table name
         .select();
 
       if (error) {
@@ -26,12 +25,11 @@ function SupabaseExample() {
         setData(data);
       }
       setLoading(false);
-      console.log(data + " " + error)
+      console.log(data + ' ' + error);
     }
 
     fetchData();
   }, []);
-
 
   if (loading) return <p>Loading...</p>;
   return (

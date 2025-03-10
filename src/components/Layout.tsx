@@ -19,7 +19,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { cityCountry } from '../helpers/constantHelper';
-import { WeatherAPI } from './weatherAPI';
+import { WeatherAPI } from './WeatherAPI';
 
 export default function Layout() {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);

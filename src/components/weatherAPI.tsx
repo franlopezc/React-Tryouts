@@ -12,7 +12,7 @@ export type WeatherAPIProps = {
   dateTwo?: string; // yyyy-MM-dd
 };
 
-export const WeatherAPI = (props: WeatherAPIProps) => {
+export const WeatherAPI: React.FC<WeatherAPIProps> = (props) => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;

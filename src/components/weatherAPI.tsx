@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { WeatherData } from '../helpers/interfaceHelper';
-import {
-  WiDaySunny,
-  WiCloud,
-  WiRain,
-  WiSnow,
-  WiThunderstorm,
-} from 'react-icons/wi';
+import partlyCloudyDay from '../assets/cloudy.gif';
+import clearDay from '../assets/sun.gif';
+import rainDay from '../assets/rain.gif';
+import thunderStormDay from '../assets/storm.gif';
+import snowDay from '../assets/snow.gif';
 
 export type WeatherAPIProps = {
   location: string; // City,Country
@@ -17,7 +15,7 @@ export type WeatherAPIProps = {
 export const WeatherAPI = (props: WeatherAPIProps) => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
-  const API_KEY = process.env.VITE_WEATHER_API_KEY;
+  const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
   useEffect(() => {
     const fetchWeather = async () => {
       try {
@@ -37,19 +35,21 @@ export const WeatherAPI = (props: WeatherAPIProps) => {
   }, [props.location, API_KEY]);
 
   const renderWeatherIcon = (icon: string) => {
+    console.log(icon);
+
     switch (icon) {
       case 'clear-day':
-        return <WiDaySunny size={40} />;
+        return <img src={clearDay} alt="Weather Animation" width="80" />;
       case 'partly-cloudy-day':
-        return <WiCloud size={40} />;
+        return <img src={partlyCloudyDay} alt="Weather Animation" width="80" />;
       case 'rain':
-        return <WiRain size={40} />;
+        return <img src={rainDay} alt="Weather Animation" width="80" />;
       case 'snow':
-        return <WiSnow size={40} />;
+        return <img src={snowDay} alt="Weather Animation" width="80" />;
       case 'thunderstorm':
-        return <WiThunderstorm size={40} />;
+        return <img src={thunderStormDay} alt="Weather Animation" width="80" />;
       default:
-        return <WiDaySunny size={40} />;
+        return <img src={clearDay} alt="Weather Animation" width="80" />;
     }
   };
 

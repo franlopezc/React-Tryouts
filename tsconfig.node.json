@@ -2,8 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "composite": true,
-    "noEmit": false, // Asegúrate de que esta opción esté configurada en false
-    "allowImportingTsExtensions": true
+    "noEmit": false
   },
   "include": ["src"]
 }

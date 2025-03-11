@@ -72,7 +72,7 @@ export default function WeatherAPI(props: WeatherAPIProps) {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <h2>Weather Data for UserName</h2>
+      <h2>Comenzamos con el escrutinio de datos:</h2>
       {loading ? (
         <p>Loading...</p>
       ) : weatherData ? (

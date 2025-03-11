@@ -33,7 +33,10 @@ export default function Layout() {
     <>
       <CssBaseline />
       <div style={{ minHeight: '100vh', color: darkMode ? 'white' : 'black' }}>
-        <AppBar position="static">
+        <AppBar
+          position="static"
+          sx={{ background: 'linear-gradient(to right, #2196F3, #2196F3)' }}
+        >
           <Toolbar>
             <IconButton edge="start" color="inherit" aria-label="home" href="/">
               <HomeIcon />
@@ -49,7 +52,7 @@ export default function Layout() {
         </AppBar>
         <Container>
           <Box
-            mt={4}
+            mt={0}
             display="flex"
             flexDirection="column"
             alignItems="center"

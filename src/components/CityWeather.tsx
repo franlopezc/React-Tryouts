@@ -22,7 +22,6 @@ export default function Home() {
 
   return (
     <Box
-      mt={4}
       display="flex"
       flexDirection="column"
       alignItems="left"

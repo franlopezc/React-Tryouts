@@ -6,7 +6,6 @@ import {
   Select,
   MenuItem,
   Box,
-  Stack,
   SelectChangeEvent,
 } from '@mui/material';
 import { cityCountry } from '../helpers/constantHelper';
@@ -21,32 +20,32 @@ export default function Home() {
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="left"
-      justifyContent="center"
-      minHeight="50vh"
-      sx={{
-        backgroundColor: 'white',
-        color: 'black',
-        p: 3,
-        maxWidth: '100%',
-        width: 'auto',
-        minWidth: 300,
-      }}
-    >
-      <Stack direction="row" spacing={2} alignItems="center">
+    <Box display="flex" flexDirection="column">
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        sx={{
+          boxShadow: '2px 2px 10px rgba(0, 0, 0, 0.1)',
+          borderRadius: '8px',
+          backgroundColor: '#37474F',
+          color: 'white',
+          padding: 3,
+          marginTop: '10px',
+          maxWidth: '100%',
+          width: '100%',
+        }}
+      >
         <Typography
-          variant="h4"
+          variant="h3"
           gutterBottom
           sx={{
-            fontFamily: 'fantasy',
+            alignSelf: 'center',
             fontWeight: 'bold',
-            fontSize: '22px',
+            fontSize: '3rem',
           }}
         >
-          Select a City:
+          Select a City
         </Typography>
         <FormControl variant="outlined">
           <InputLabel id="city-select-label">City</InputLabel>
@@ -83,7 +82,7 @@ export default function Home() {
             ))}
           </Select>
         </FormControl>
-      </Stack>
+      </Box>
       {selectedCity && <WeatherAPI location={selectedCity} />}
     </Box>
   );

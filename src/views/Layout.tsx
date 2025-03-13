@@ -7,7 +7,7 @@ export default function Layout() {
   return (
     <>
       <CssBaseline />
-      <div style={{ minHeight: '100vh', color: 'black' }}>
+      <div style={{ minHeight: '100vh' }}>
         <header style={{ height: 'auto' }}>
           <Navbar />
         </header>

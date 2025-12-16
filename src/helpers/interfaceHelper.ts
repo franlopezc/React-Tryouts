@@ -65,6 +65,8 @@ export interface WeatherHour {
   datetime: string;
   datetimeEpoch: number;
   temp: number;
+  tempmax: number;
+  tempmin: number;
   feelslike: number;
   humidity: number;
   dew: number;

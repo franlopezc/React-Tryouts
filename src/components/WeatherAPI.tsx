@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
-import { WeatherData } from '../helpers/interfaceHelper';
-import partlyCloudyDay from '../assets/cloudy.gif';
-import clearDay from '../assets/sun.gif';
-import rainDay from '../assets/rain.gif';
-import thunderStormDay from '../assets/storm.gif';
-import snowDay from '../assets/snow.gif';
+import { WeatherData, WeatherHour } from '../helpers/interfaceHelper';
+import WeatherDay from './WeatherDay';
+import { renderWeatherIcon } from '../helpers/weatherFunctionHelper';
 
 export type WeatherAPIProps = {
   location: string; // City,Country
@@ -34,25 +31,6 @@ export default function WeatherAPI(props: WeatherAPIProps) {
     fetchWeather();
   }, [props.location, API_KEY]);
 
-  const renderWeatherIcon = (icon: string) => {
-    console.log(icon);
-
-    switch (icon) {
-      case 'clear-day':
-        return <img src={clearDay} alt="Weather Animation" width="80" />;
-      case 'partly-cloudy-day':
-        return <img src={partlyCloudyDay} alt="Weather Animation" width="80" />;
-      case 'rain':
-        return <img src={rainDay} alt="Weather Animation" width="80" />;
-      case 'snow':
-        return <img src={snowDay} alt="Weather Animation" width="80" />;
-      case 'thunderstorm':
-        return <img src={thunderStormDay} alt="Weather Animation" width="80" />;
-      default:
-        return <img src={clearDay} alt="Weather Animation" width="80" />;
-    }
-  };
-
   const getCurrentWeather = () => {
     if (!weatherData) return null;
 
@@ -68,7 +46,33 @@ export default function WeatherAPI(props: WeatherAPIProps) {
     return currentWeather;
   };
 
+  const getWeeklyWeather = (): {
+    day: number;
+    weather: WeatherHour | undefined;
+  }[] => {
+    if (!weatherData) return [];
+
+    const weeklyWeather = weatherData.days.map((day, index) => {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentDay = weatherData.days[index];
+
+      const currentWeather = currentDay.hours.find((hour) => {
+        const hourDate = new Date(hour.datetimeEpoch * 1000);
+        return hourDate.getHours() === currentHour;
+      });
+
+      return {
+        day: index,
+        weather: currentWeather,
+      };
+    });
+
+    return weeklyWeather;
+  };
+
   const currentWeather = getCurrentWeather();
+  const weeklyWeather = getWeeklyWeather();
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
@@ -79,6 +83,15 @@ export default function WeatherAPI(props: WeatherAPIProps) {
         <div>
           {currentWeather ? (
             <div>
+              <div className="weekly-weather">
+                {weeklyWeather.map((dayWeather, index) => (
+                  <WeatherDay
+                    key={index}
+                    day={dayWeather.day}
+                    weather={dayWeather.weather}
+                  />
+                ))}
+              </div>
               <div>{renderWeatherIcon(currentWeather.icon)}</div>
               <p>{JSON.stringify(currentWeather, null, 2)}</p>
             </div>

@@ -3,6 +3,8 @@
 import React from 'react';
 import { Tabs, Tab, Box, Paper } from '@mui/material';
 import { MapPin, Search } from 'lucide-react';
+import { useLanguage } from '../i18n/LanguageContext';
+import LanguageSelector from './LanguageSelector';
 
 interface NavigationTabsProps {
   currentTab: number;
@@ -10,6 +12,8 @@ interface NavigationTabsProps {
 }
 
 const NavigationTabs: React.FC<NavigationTabsProps> = ({ currentTab, onTabChange }) => {
+  const { t } = useLanguage();
+  
   return (
     <Paper 
       elevation={0}
@@ -17,9 +21,14 @@ const NavigationTabs: React.FC<NavigationTabsProps> = ({ currentTab, onTabChange
         borderRadius: 'var(--radius-xl)',
         background: 'var(--gradient-card)',
         border: '1px solid var(--neutral-200)',
-        mb: 3
+        mb: 3,
+        position: 'relative'
       }}
     >
+      <Box sx={{ position: 'absolute', top: 16, right: 16, zIndex: 1 }}>
+        <LanguageSelector />
+      </Box>
+      
       <Box sx={{ p: 1 }}>
         <Tabs
           value={currentTab}
@@ -52,13 +61,13 @@ const NavigationTabs: React.FC<NavigationTabsProps> = ({ currentTab, onTabChange
           <Tab
             icon={<MapPin size={20} />}
             iconPosition="start"
-            label="Provincias"
+            label={t.nav.provinces}
             sx={{ minWidth: 150 }}
           />
           <Tab
             icon={<Search size={20} />}
             iconPosition="start"
-            label="Mi Localidad"
+            label={t.nav.myLocation}
             sx={{ minWidth: 150 }}
           />
         </Tabs>

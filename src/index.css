@@ -1,6 +1,7 @@
 @import './styles/designTokens.css';
 @import './styles/dynamicThemes.css';
 @import './styles/backgroundThemes.css';
+@import './styles/temperatureGradients.css';
 
 :root {
   font-family: var(--font-family);

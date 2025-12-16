@@ -1,6 +1,7 @@
 import { Box, Typography, useTheme, useMediaQuery } from '@mui/material';
 import { ProcessedWeatherHour } from '../types/weather';
 import WeatherCard from './WeatherCard';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface HourlyWeatherProps {
   hours: ProcessedWeatherHour[];
@@ -9,6 +10,7 @@ interface HourlyWeatherProps {
 
 // Componente especializado para mostrar el pronóstico por horas de forma clara y navegable
 export default function HourlyWeather({ hours, currentHour }: HourlyWeatherProps) {
+  const { t } = useLanguage();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
@@ -19,13 +21,14 @@ export default function HourlyWeather({ hours, currentHour }: HourlyWeatherProps
     <Box sx={{ mb: 4 }}>
       <Typography 
         variant="h5" 
-        className="text-accessible-primary"
         sx={{ 
           mb: 3, 
-          fontWeight: 600
+          fontWeight: 600,
+          color: '#2d3748',
+          textShadow: '0 1px 3px rgba(255, 255, 255, 0.9)'
         }}
       >
-        Pronóstico por horas
+        {t.weather.hourlyForecast}
       </Typography>
       
       <Box

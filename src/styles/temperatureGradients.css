@@ -1,0 +1,107 @@
+/* Gradientes suaves por temperatura para cuadros de previsión */
+
+/* Muy frío (< 0°C) - Azules claros */
+.temp-gradient-very-cold {
+  background: linear-gradient(135deg, 
+    rgba(239, 246, 255, 0.95) 0%, 
+    rgba(219, 234, 254, 0.9) 100%);
+  border: 2px solid rgba(59, 130, 246, 0.4);
+  backdrop-filter: blur(10px);
+  color: #1f2937 !important;
+}
+
+/* Frío (0-10°C) - Azules medios suaves */
+.temp-gradient-cold {
+  background: linear-gradient(135deg, 
+    rgba(240, 249, 255, 0.95) 0%, 
+    rgba(224, 242, 254, 0.9) 100%);
+  border: 2px solid rgba(14, 165, 233, 0.4);
+  backdrop-filter: blur(10px);
+  color: #1f2937 !important;
+}
+
+/* Templado (10-20°C) - Verdes/turquesas claros */
+.temp-gradient-mild {
+  background: linear-gradient(135deg, 
+    rgba(240, 253, 244, 0.95) 0%, 
+    rgba(220, 252, 231, 0.9) 100%);
+  border: 2px solid rgba(34, 197, 94, 0.4);
+  backdrop-filter: blur(10px);
+  color: #1f2937 !important;
+}
+
+/* Caliente (20-30°C) - Naranjas suaves */
+.temp-gradient-warm {
+  background: linear-gradient(135deg, 
+    rgba(255, 251, 235, 0.95) 0%, 
+    rgba(255, 237, 213, 0.9) 100%);
+  border: 2px solid rgba(249, 115, 22, 0.4);
+  backdrop-filter: blur(10px);
+  color: #1f2937 !important;
+}
+
+/* Muy caliente (> 30°C) - Rojos claros */
+.temp-gradient-hot {
+  background: linear-gradient(135deg, 
+    rgba(255, 245, 245, 0.95) 0%, 
+    rgba(254, 226, 226, 0.9) 100%);
+  border: 2px solid rgba(239, 68, 68, 0.4);
+  backdrop-filter: blur(10px);
+  color: #1f2937 !important;
+}
+
+/* Hover states para interactividad - mantienen alta legibilidad */
+.temp-gradient-very-cold:hover {
+  background: linear-gradient(135deg, 
+    rgba(239, 246, 255, 0.98) 0%, 
+    rgba(219, 234, 254, 0.95) 100%);
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+.temp-gradient-cold:hover {
+  background: linear-gradient(135deg, 
+    rgba(240, 249, 255, 0.98) 0%, 
+    rgba(224, 242, 254, 0.95) 100%);
+  border-color: rgba(14, 165, 233, 0.6);
+  box-shadow: 0 8px 25px rgba(14, 165, 233, 0.15);
+}
+
+.temp-gradient-mild:hover {
+  background: linear-gradient(135deg, 
+    rgba(240, 253, 244, 0.98) 0%, 
+    rgba(220, 252, 231, 0.95) 100%);
+  border-color: rgba(34, 197, 94, 0.6);
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+}
+
+.temp-gradient-warm:hover {
+  background: linear-gradient(135deg, 
+    rgba(255, 251, 235, 0.98) 0%, 
+    rgba(255, 237, 213, 0.95) 100%);
+  border-color: rgba(249, 115, 22, 0.6);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.15);
+}
+
+.temp-gradient-hot:hover {
+  background: linear-gradient(135deg, 
+    rgba(255, 245, 245, 0.98) 0%, 
+    rgba(254, 226, 226, 0.95) 100%);
+  border-color: rgba(239, 68, 68, 0.6);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15);
+}
+
+/* Asegurar contraste en textos - colores específicos por gradiente */
+.temp-gradient-very-cold *,
+.temp-gradient-cold * {
+  color: #1a365d !important; /* Azul muy oscuro para fondos azules */
+}
+
+.temp-gradient-mild * {
+  color: #1a202c !important; /* Gris muy oscuro para fondos verdes */
+}
+
+.temp-gradient-warm *,
+.temp-gradient-hot * {
+  color: #2d3748 !important; /* Gris oscuro para fondos cálidos */
+}

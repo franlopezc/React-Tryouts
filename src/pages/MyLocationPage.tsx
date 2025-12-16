@@ -19,8 +19,12 @@ import WeatherSummary from '../components/WeatherSummary';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { ProcessedWeatherData, WeatherError } from '../types/weather';
 import { extractProvince } from '../utils/locationUtils';
+import { useLanguage } from '../i18n/LanguageContext';
+import { getTemperatureClass } from '../utils/temperatureColors';
+import LocationMap from '../components/LocationMap';
 
 const MyLocationPage: React.FC = () => {
+  const { t } = useLanguage();
   const [locationInput, setLocationInput] = useState<string>('');
   const [weatherData, setWeatherData] = useState<ProcessedWeatherData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -40,7 +44,7 @@ const MyLocationPage: React.FC = () => {
     } catch (err) {
       setWeatherData(null);
       setError({ 
-        message: 'No se encuentra información para el domicilio introducido' 
+        message: t.myLocation.notFound 
       });
     } finally {
       setLoading(false);
@@ -56,43 +60,43 @@ const MyLocationPage: React.FC = () => {
     }
   };
 
+  console.log('Weather Data:', weatherData);
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ mb: 4 }}>
-        <Card className="app-header">
+        <Card className={`temp-bg-card ${weatherData ? getTemperatureClass(weatherData.temp) : 'temp-mild'}`}>
           <CardContent sx={{ p: 4, textAlign: 'center' }}>
             <Typography
               variant="h3"
+              className="text-accessible-primary"
               sx={{
                 fontWeight: 'bold',
                 mb: 2,
                 fontSize: { xs: '2rem', md: '3rem' },
-                color: 'var(--neutral-900)',
               }}
             >
-              📍 Mi Localidad
+              {t.myLocation.title}
             </Typography>
             <Typography
               variant="subtitle1"
+              className="text-accessible-secondary"
               sx={{
                 mb: 4,
                 fontSize: '1.1rem',
-                color: 'var(--neutral-700)',
               }}
             >
-              Busca cualquier pueblo o ciudad de España para ver su clima
+              {t.myLocation.subtitle}
             </Typography>
             
             <Box sx={{ maxWidth: 500, mx: 'auto' }}>
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <TextField
-                  label="Buscar localidad"
                   variant="outlined"
                   fullWidth
                   value={locationInput}
                   onChange={handleInputChange}
-                  placeholder="Ej: Madrid, Barcelona, Calle Mayor 1..."
+                  placeholder={t.myLocation.searchLabel}
                   disabled={loading}
                   InputProps={{
                     startAdornment: (
@@ -103,8 +107,26 @@ const MyLocationPage: React.FC = () => {
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
                       borderRadius: 'var(--radius-lg)',
+                      '& fieldset': {
+                        borderColor: 'rgba(0, 0, 0, 0.23)',
+                      },
+                      '&:hover fieldset': {
+                        borderColor: 'rgba(0, 0, 0, 0.4)',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: '#1976d2',
+                      },
+                    },
+                    '& .MuiInputLabel-root': {
+                      color: 'rgba(0, 0, 0, 0.6)',
+                      '&.Mui-focused': {
+                        color: '#1976d2',
+                      },
+                    },
+                    '& .MuiOutlinedInput-input': {
+                      color: '#1a1a1a',
                     },
                   }}
                 />
@@ -119,15 +141,15 @@ const MyLocationPage: React.FC = () => {
                     fontWeight: 600,
                   }}
                 >
-                  {loading ? 'Buscando...' : 'Buscar'}
+                  {loading ? t.myLocation.searching : t.myLocation.searchButton}
                 </Button>
               </Box>
             </Box>
 
             {weatherData && (
               <Box sx={{ mt: 2 }}>
-                <Typography variant="body2" color="text.secondary">
-                  Mostrando clima para: <strong>{weatherData.address}</strong>
+                <Typography variant="body2" className="text-accessible-muted">
+                  {t.myLocation.showingWeatherFor} <strong>{weatherData.address}</strong>
                   {extractProvince(weatherData.resolvedAddress) && (
                     <span> - {extractProvince(weatherData.resolvedAddress)}</span>
                   )}
@@ -139,7 +161,7 @@ const MyLocationPage: React.FC = () => {
       </Box>
 
       {loading && hasSearched && (
-        <LoadingSpinner message="Buscando información meteorológica..." />
+        <LoadingSpinner message={t.common.searchingWeather} />
       )}
       
       {error && hasSearched && !loading && (
@@ -161,17 +183,28 @@ const MyLocationPage: React.FC = () => {
       
       <Fade in={!!weatherData && !loading && hasSearched} timeout={500}>
         <Box>
-          {weatherData && <WeatherSummary weatherData={weatherData} />}
+          {weatherData && (
+            <>
+              <Box sx={{ mb: 4 }}>
+                <LocationMap
+                  latitude={weatherData.latitude}
+                  longitude={weatherData.longitude}
+                  locationName={weatherData.address}
+                />
+              </Box>
+              <WeatherSummary weatherData={weatherData} />
+            </>
+          )}
         </Box>
       </Fade>
 
       {!hasSearched && (
         <Box sx={{ textAlign: 'center', py: 8 }}>
           <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
-            🔍 Busca cualquier localidad
+            {t.myLocation.searchToStart}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Escribe el nombre de una ciudad, pueblo o dirección
+            {t.myLocation.searchDescription}
           </Typography>
         </Box>
       )}

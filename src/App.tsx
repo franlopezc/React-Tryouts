@@ -1,5 +1,6 @@
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { AppRouter } from './AppRouter';
+import { LanguageProvider } from './i18n/LanguageContext';
 
 //Crear un contexto con el theme para poder tratar el modo claro oscuro.
 
@@ -153,9 +154,11 @@ export default function App() {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <AppRouter />;
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <AppRouter />
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }

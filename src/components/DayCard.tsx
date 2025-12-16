@@ -1,14 +1,17 @@
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardContent, Typography, Box, Chip } from '@mui/material';
 import { ProcessedWeatherDay } from '../types/weather';
 import { renderWeatherIcon } from '../helpers/weatherFunctionHelper';
 import { getTemperatureClass } from '../utils/temperatureColors';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface DayCardProps {
   day: ProcessedWeatherDay;
   isToday?: boolean;
+  onClick?: () => void;
 }
 
-export default function DayCard({ day, isToday = false }: DayCardProps) {
+export default function DayCard({ day, isToday = false, onClick }: DayCardProps) {
+  const { t } = useLanguage();
   const tempClass = getTemperatureClass(day.temp);
   
   const formatDate = (datetime: string) => {
@@ -22,70 +25,99 @@ export default function DayCard({ day, isToday = false }: DayCardProps) {
 
   return (
     <Card
-      className={`temp-bg-card-secondary temp-interactive ${tempClass}-secondary`}
+      className={isToday ? `temp-bg-card ${tempClass}` : `temp-bg-card-secondary temp-interactive ${tempClass}-secondary`}
+      onClick={onClick}
       sx={{
-        minWidth: 180,
+        minWidth: 200,
         position: 'relative',
-        ...(isToday && {
-          border: '2px solid var(--primary-500)',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
-        })
+        cursor: onClick ? 'pointer' : 'default',
+        '&:focus-visible': {
+          outline: '2px solid var(--primary-500)',
+          outlineOffset: '2px'
+        }
       }}
+      tabIndex={onClick ? 0 : -1}
+      role={onClick ? 'button' : undefined}
+      aria-label={onClick ? `Ver detalles del ${isToday ? 'día de hoy' : formatDate(day.datetime)}` : undefined}
+      onKeyDown={onClick ? (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      } : undefined}
     >
-      <CardContent sx={{ textAlign: 'center', p: 3 }}>
+      {isToday && (
+        <Chip
+          label={t.weather.today}
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            backgroundColor: 'rgba(2, 2, 2, 0.2)',
+            color: 'white',
+            fontWeight: 'bold',
+          }}
+        />
+      )}
+      
+      <CardContent sx={{ textAlign: 'center', pb: 2 }}>
         <Typography 
           variant="h6" 
           className="text-accessible-primary"
           sx={{ mb: 1, fontWeight: 600 }}
         >
-          {isToday ? 'Hoy' : formatDate(day.datetime)}
+          {isToday ? t.weather.today : formatDate(day.datetime)}
         </Typography>
         
         <Box sx={{ mb: 2 }}>
-          {renderWeatherIcon(day.icon, 60)}
+          {renderWeatherIcon(day.icon)}
         </Box>
         
-        <Box sx={{ mb: 2 }}>
-          <Typography 
-            variant="h4" 
-            className="text-accessible-primary"
-            sx={{ fontWeight: 'bold', lineHeight: 1 }}
-          >
-            {Math.round(day.tempmax)}°
-          </Typography>
-          <Typography 
-            variant="body1" 
-            className="text-accessible-muted"
-            sx={{ fontWeight: 500 }}
-          >
-            {Math.round(day.tempmin)}°
-          </Typography>
-        </Box>
+        <Typography 
+          variant="h4" 
+          className="text-accessible-primary"
+          sx={{ mb: 1, fontWeight: 'bold' }}
+        >
+          {Math.round(day.tempmax)}° / {Math.round(day.tempmin)}°
+        </Typography>
         
         <Typography 
           variant="body2" 
           className="text-accessible-secondary"
           sx={{ 
-            textTransform: 'capitalize',
-            mb: 2,
-            minHeight: '2.5em',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+            mb: 2, 
+            textTransform: 'capitalize'
           }}
         >
           {day.conditions}
         </Typography>
         
-        <Box sx={{ display: 'flex', justifyContent: 'space-around', fontSize: '0.75rem' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
           <Box>
             <Typography variant="caption" className="text-accessible-muted" display="block">
-              💧 {Math.round(day.precipprob)}%
+              {t.weather.rain}
+            </Typography>
+            <Typography variant="body2" className="text-accessible-primary" sx={{ fontWeight: 500 }}>
+              {Math.round(day.precipprob)}%
             </Typography>
           </Box>
+          
           <Box>
             <Typography variant="caption" className="text-accessible-muted" display="block">
-              💨 {Math.round(day.windspeed)} km/h
+              {t.weather.humidity}
+            </Typography>
+            <Typography variant="body2" className="text-accessible-primary" sx={{ fontWeight: 500 }}>
+              {Math.round(day.humidity)}%
+            </Typography>
+          </Box>
+          
+          <Box>
+            <Typography variant="caption" className="text-accessible-muted" display="block">
+              {t.weather.wind}
+            </Typography>
+            <Typography variant="body2" className="text-accessible-primary" sx={{ fontWeight: 500 }}>
+              {Math.round(day.windspeed)} km/h
             </Typography>
           </Box>
         </Box>

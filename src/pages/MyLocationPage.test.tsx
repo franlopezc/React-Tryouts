@@ -23,10 +23,20 @@ vi.mock('../components/LoadingSpinner', () => ({
   ),
 }));
 
+vi.mock('../components/LocationMap', () => ({
+  default: ({ latitude, longitude, locationName }: any) => (
+    <div data-testid="location-map">
+      Map for {locationName} at {latitude}, {longitude}
+    </div>
+  ),
+}));
+
 const mockWeatherData = {
   address: 'Madrid, España',
   temp: 20,
   conditions: 'Clear',
+  latitude: 40.4168,
+  longitude: -3.7038,
   days: [
     {
       datetime: '2024-01-15',
@@ -157,8 +167,10 @@ describe('MyLocationPage', () => {
     fireEvent.click(searchButton);
     
     await waitFor(() => {
+      expect(screen.getByTestId('location-map')).toBeInTheDocument();
       expect(screen.getByTestId('weather-summary')).toBeInTheDocument();
       expect(screen.getByText('Mostrando clima para: Madrid, España')).toBeInTheDocument();
+      expect(screen.getByText('Map for Madrid, España at 40.4168, -3.7038')).toBeInTheDocument();
     });
   });
 

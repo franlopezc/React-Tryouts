@@ -2,6 +2,7 @@ import { Card, CardContent, Typography, Box, Chip } from '@mui/material';
 import { ProcessedWeatherHour } from '../types/weather';
 import { renderWeatherIcon } from '../helpers/weatherFunctionHelper';
 import { getTemperatureClass } from '../utils/temperatureColors';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface WeatherCardProps {
   weather: ProcessedWeatherHour;
@@ -10,6 +11,7 @@ interface WeatherCardProps {
 
 // Componente reutilizable para mostrar información del clima de forma clara y organizada
 export default function WeatherCard({ weather, isCurrentHour = false }: WeatherCardProps) {
+  const { t } = useLanguage();
   const tempClass = getTemperatureClass(weather.temp);
   
   const formatTime = (datetimeEpoch: number) => {
@@ -29,7 +31,7 @@ export default function WeatherCard({ weather, isCurrentHour = false }: WeatherC
     >
       {isCurrentHour && (
         <Chip
-          label="Ahora"
+          label={t.weather.now}
           size="small"
           sx={{
             position: 'absolute',
@@ -77,7 +79,7 @@ export default function WeatherCard({ weather, isCurrentHour = false }: WeatherC
         <Box sx={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
           <Box>
             <Typography variant="caption" className="text-accessible-muted" display="block">
-              Sensación
+              {t.weather.feelsLike}
             </Typography>
             <Typography variant="body2" className="text-accessible-primary" sx={{ fontWeight: 500 }}>
               {Math.round(weather.feelslike)}°
@@ -86,7 +88,7 @@ export default function WeatherCard({ weather, isCurrentHour = false }: WeatherC
           
           <Box>
             <Typography variant="caption" className="text-accessible-muted" display="block">
-              Humedad
+              {t.weather.humidity}
             </Typography>
             <Typography variant="body2" className="text-accessible-primary" sx={{ fontWeight: 500 }}>
               {Math.round(weather.humidity)}%
@@ -95,7 +97,7 @@ export default function WeatherCard({ weather, isCurrentHour = false }: WeatherC
           
           <Box>
             <Typography variant="caption" className="text-accessible-muted" display="block">
-              Viento
+              {t.weather.wind}
             </Typography>
             <Typography variant="body2" className="text-accessible-primary" sx={{ fontWeight: 500 }}>
               {Math.round(weather.windspeed)} km/h

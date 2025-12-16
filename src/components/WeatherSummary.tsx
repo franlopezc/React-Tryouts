@@ -5,6 +5,7 @@ import { useWeatherTheme } from '../hooks/useWeatherTheme';
 import { getTemperatureClass } from '../utils/temperatureColors';
 import HourlyWeather from './HourlyWeather';
 import WeeklyWeather from './WeeklyWeather';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface WeatherSummaryProps {
   weatherData: ProcessedWeatherData;
@@ -12,6 +13,7 @@ interface WeatherSummaryProps {
 
 // Componente para mostrar el resumen principal del clima actual con información destacada
 export default function WeatherSummary({ weatherData }: WeatherSummaryProps) {
+  const { t } = useLanguage();
   const currentDay = weatherData.days[0];
   const currentWeather = currentDay.hours[0] || {
     temp: weatherData.temp,
@@ -84,7 +86,7 @@ export default function WeatherSummary({ weatherData }: WeatherSummaryProps) {
                 className="text-accessible-muted"
                 sx={{ mt: 1 }}
               >
-                Sensación térmica: {Math.round(currentWeather.feelslike)}°C
+                {t.weather.feelsLike}: {Math.round(currentWeather.feelslike)}°C
               </Typography>
             </Box>
           </Grid>
@@ -96,14 +98,14 @@ export default function WeatherSummary({ weatherData }: WeatherSummaryProps) {
                 className="text-accessible-primary"
                 sx={{ mb: 2, fontWeight: 600 }}
               >
-                Condiciones actuales
+                {t.weather.currentConditions}
               </Typography>
               
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Box className={`temp-bg-card-secondary temp-interactive ${tempClass}-secondary`} sx={{ p: 2, borderRadius: 2 }}>
                     <Typography variant="body2" className="text-accessible-muted">
-                      Máxima del día
+                      {t.weather.maxTemp}
                     </Typography>
                     <Typography variant="h6" className="text-accessible-primary">
                       {Math.round(currentDay.tempmax)}°C
@@ -114,7 +116,7 @@ export default function WeatherSummary({ weatherData }: WeatherSummaryProps) {
                 <Grid item xs={6}>
                   <Box className={`temp-bg-card-secondary temp-interactive ${tempClass}-secondary`} sx={{ p: 2, borderRadius: 2 }}>
                     <Typography variant="body2" className="text-accessible-muted">
-                      Humedad
+                      {t.weather.humidity}
                     </Typography>
                     <Typography variant="h6" className="text-accessible-primary">
                       {Math.round(currentWeather.humidity)}%
@@ -125,7 +127,7 @@ export default function WeatherSummary({ weatherData }: WeatherSummaryProps) {
                 <Grid item xs={6}>
                   <Box className={`temp-bg-card-secondary temp-interactive ${tempClass}-secondary`} sx={{ p: 2, borderRadius: 2 }}>
                     <Typography variant="body2" className="text-accessible-muted">
-                      Viento
+                      {t.weather.wind}
                     </Typography>
                     <Typography variant="h6" className="text-accessible-primary">
                       {Math.round(currentWeather.windspeed)} km/h
@@ -136,7 +138,7 @@ export default function WeatherSummary({ weatherData }: WeatherSummaryProps) {
                 <Grid item xs={6}>
                   <Box className={`temp-bg-card-secondary temp-interactive ${tempClass}-secondary`} sx={{ p: 2, borderRadius: 2 }}>
                     <Typography variant="body2" className="text-accessible-muted">
-                      Presión
+                      {t.weather.pressure}
                     </Typography>
                     <Typography variant="h6" className="text-accessible-primary">
                       {Math.round(currentWeather.pressure)} hPa

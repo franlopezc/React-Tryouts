@@ -19,6 +19,7 @@ import WeatherSummary from '../components/WeatherSummary';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorAlert from '../components/ErrorAlert';
 import { extractProvince } from '../utils/locationUtils';
+import { useLanguage } from '../i18n/LanguageContext';
 
 const SPANISH_CITIES = [
   'Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Zaragoza', 'Málaga',
@@ -34,6 +35,7 @@ const SPANISH_CITIES = [
 ];
 
 const ProvincesPage: React.FC = () => {
+  const { t } = useLanguage();
   const [selectedCity, setSelectedCity] = useState<string>('');
   const { data, loading, error } = useWeather(selectedCity || null);
 
@@ -55,7 +57,7 @@ const ProvincesPage: React.FC = () => {
                 color: 'var(--neutral-900)',
               }}
             >
-              🏛️ Clima por Provincias
+              {t.provinces.title}
             </Typography>
             <Typography
               variant="subtitle1"
@@ -65,26 +67,26 @@ const ProvincesPage: React.FC = () => {
                 color: 'var(--neutral-700)',
               }}
             >
-              Selecciona una ciudad española para ver su pronóstico meteorológico
+              {t.provinces.subtitle}
             </Typography>
             
             <Box sx={{ maxWidth: 400, mx: 'auto' }}>
               <FormControl fullWidth variant="outlined">
                 <InputLabel id="city-select-label">
-                  Seleccionar ciudad
+                  {t.provinces.selectCity}
                 </InputLabel>
                 <Select
                   labelId="city-select-label"
                   value={selectedCity}
                   onChange={handleCityChange}
-                  label="Seleccionar ciudad"
+                  label={t.provinces.selectCity}
                   sx={{
                     backgroundColor: 'rgba(255, 255, 255, 0.9)',
                     borderRadius: 'var(--radius-lg)',
                   }}
                 >
                   <MenuItem value="">
-                    <em>Selecciona una ciudad</em>
+                    <em>{t.provinces.selectCityPlaceholder}</em>
                   </MenuItem>
                   {SPANISH_CITIES.map((city) => (
                     <MenuItem key={city} value={city}>
@@ -98,7 +100,7 @@ const ProvincesPage: React.FC = () => {
             {selectedCity && (
               <Box sx={{ mt: 2 }}>
                 <Typography variant="body2" color="text.secondary">
-                  Ciudad seleccionada: <strong>{selectedCity}</strong>
+                  {t.provinces.selectedCity} <strong>{selectedCity}</strong>
                 </Typography>
               </Box>
             )}
@@ -106,7 +108,7 @@ const ProvincesPage: React.FC = () => {
         </Card>
       </Box>
 
-      {loading && <LoadingSpinner message="Cargando datos meteorológicos..." />}
+      {loading && <LoadingSpinner message={t.common.loadingWeather} />}
       
       {error && (
         <ErrorAlert 
@@ -122,7 +124,7 @@ const ProvincesPage: React.FC = () => {
               {extractProvince(data.address) && (
                 <Box sx={{ mb: 2, textAlign: 'center' }}>
                   <Typography variant="body2" color="text.secondary">
-                    📍 Provincia: <strong>{extractProvince(data.address)}</strong>
+                    📍 {t.provinces.province} <strong>{extractProvince(data.address)}</strong>
                   </Typography>
                 </Box>
               )}

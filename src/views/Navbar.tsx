@@ -37,7 +37,14 @@ export const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#04aeef' }}>
+    <AppBar 
+      position="static" 
+      sx={{ 
+        background: 'linear-gradient(135deg, #486581 0%, #334e68 100%)',
+        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+        borderBottom: '1px solid #627d98'
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -83,11 +90,35 @@ export const Navbar = () => {
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{ display: { xs: 'block', md: 'none' } }}
+              sx={{ 
+                display: { xs: 'block', md: 'none' },
+                '& .MuiPaper-root': {
+                  borderRadius: '12px',
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                  border: '1px solid #e2e8f0',
+                  mt: 1
+                }
+              }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+                <MenuItem 
+                  key={page} 
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: '#f0f4f8'
+                    }
+                  }}
+                >
+                  <Typography 
+                    sx={{ 
+                      textAlign: 'center',
+                      color: '#1a202c',
+                      fontWeight: 500
+                    }}
+                  >
+                    {page}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -128,7 +159,14 @@ export const Navbar = () => {
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ 
+                mt: '45px',
+                '& .MuiPaper-root': {
+                  borderRadius: '12px',
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                  border: '1px solid #e2e8f0'
+                }
+              }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -144,8 +182,22 @@ export const Navbar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>
+                <MenuItem 
+                  key={setting} 
+                  onClick={handleCloseUserMenu}
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: '#f0f4f8'
+                    }
+                  }}
+                >
+                  <Typography 
+                    sx={{ 
+                      textAlign: 'center',
+                      color: '#1a202c',
+                      fontWeight: 500
+                    }}
+                  >
                     {setting}
                   </Typography>
                 </MenuItem>

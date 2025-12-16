@@ -1,18 +1,38 @@
-import { Container, Grid } from '@mui/material';
-import CityWeather from '../components/CityWeather';
+import React, { useState } from 'react';
+import { Box, Container } from '@mui/material';
+import NavigationTabs from '../components/NavigationTabs';
+import ProvincesPage from '../pages/ProvincesPage';
+import MyLocationPage from '../pages/MyLocationPage';
 
-export default function Home() {
+// Vista principal refactorizada con navegación por pestañas
+const Home: React.FC = () => {
+  const [currentTab, setCurrentTab] = useState<number>(0);
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setCurrentTab(newValue);
+  };
+
   return (
-    <Container maxWidth="lg" sx={{ paddingTop: 0 }}>
-      <Grid container spacing={0}>
-        {/* Left Column - Complementary Background */}
-        {/* Center Content - Main Section */}
-        <Grid item xs={10} sx={{ minHeight: '100vh' }}>
-          <CityWeather />
-        </Grid>
-
-        {/* Right Column - Complementary Background */}
-      </Grid>
-    </Container>
+    <Box 
+      className="app-container"
+      sx={{ 
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, var(--neutral-50) 0%, var(--primary-50) 50%, var(--primary-100) 100%)',
+        py: 3,
+        px: 2
+      }}
+    >
+      <Container maxWidth="lg">
+        <NavigationTabs 
+          currentTab={currentTab} 
+          onTabChange={handleTabChange} 
+        />
+        
+        {currentTab === 0 && <ProvincesPage />}
+        {currentTab === 1 && <MyLocationPage />}
+      </Container>
+    </Box>
   );
-}
+};
+
+export default Home;

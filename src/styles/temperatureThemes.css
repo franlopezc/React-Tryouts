@@ -1,0 +1,227 @@
+/* Sistema de Colores Dinámicos por Temperatura */
+
+/* Variables base para transiciones suaves */
+:root {
+  --temp-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --glow-intensity: 0.3;
+  --border-width: 2px;
+}
+
+/* MUY FRÍO: < 0°C - Azules intensos y cristalinos */
+[data-temp-range="very-cold"] {
+  --temp-primary: #1e3a8a;
+  --temp-secondary: #3b82f6;
+  --temp-accent: #60a5fa;
+  
+  --temp-gradient: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+  --temp-gradient-intense: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%);
+  --temp-card-bg: linear-gradient(145deg, rgba(30, 58, 138, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
+  
+  --temp-border: rgba(96, 165, 250, 0.4);
+  --temp-shadow: 0 8px 32px rgba(30, 58, 138, 0.3);
+  --temp-glow: 0 0 20px rgba(96, 165, 250, var(--glow-intensity));
+  
+  --temp-text: #dbeafe;
+  --temp-text-contrast: #1e3a8a;
+}
+
+/* FRÍO: 0-10°C - Azul medio refrescante */
+[data-temp-range="cold"] {
+  --temp-primary: #0ea5e9;
+  --temp-secondary: #38bdf8;
+  --temp-accent: #7dd3fc;
+  
+  --temp-gradient: linear-gradient(135deg, #0ea5e9 0%, #38bdf8 50%, #7dd3fc 100%);
+  --temp-gradient-intense: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 50%, #38bdf8 100%);
+  --temp-card-bg: linear-gradient(145deg, rgba(14, 165, 233, 0.12) 0%, rgba(56, 189, 248, 0.08) 100%);
+  
+  --temp-border: rgba(125, 211, 252, 0.35);
+  --temp-shadow: 0 8px 32px rgba(14, 165, 233, 0.25);
+  --temp-glow: 0 0 20px rgba(125, 211, 252, var(--glow-intensity));
+  
+  --temp-text: #e0f2fe;
+  --temp-text-contrast: #0c4a6e;
+}
+
+/* TEMPLADO: 10-20°C - Verdes y turquesas equilibrados */
+[data-temp-range="mild"] {
+  --temp-primary: #059669;
+  --temp-secondary: #10b981;
+  --temp-accent: #34d399;
+  
+  --temp-gradient: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+  --temp-gradient-intense: linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%);
+  --temp-card-bg: linear-gradient(145deg, rgba(5, 150, 105, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%);
+  
+  --temp-border: rgba(52, 211, 153, 0.35);
+  --temp-shadow: 0 8px 32px rgba(5, 150, 105, 0.25);
+  --temp-glow: 0 0 20px rgba(52, 211, 153, var(--glow-intensity));
+  
+  --temp-text: #d1fae5;
+  --temp-text-contrast: #064e3b;
+}
+
+/* CALIENTE: 20-30°C - Naranjas y rojos suaves */
+[data-temp-range="warm"] {
+  --temp-primary: #ea580c;
+  --temp-secondary: #f97316;
+  --temp-accent: #fb923c;
+  
+  --temp-gradient: linear-gradient(135deg, #ea580c 0%, #f97316 50%, #fb923c 100%);
+  --temp-gradient-intense: linear-gradient(135deg, #9a3412 0%, #ea580c 50%, #f97316 100%);
+  --temp-card-bg: linear-gradient(145deg, rgba(234, 88, 12, 0.12) 0%, rgba(249, 115, 22, 0.08) 100%);
+  
+  --temp-border: rgba(251, 146, 60, 0.4);
+  --temp-shadow: 0 8px 32px rgba(234, 88, 12, 0.3);
+  --temp-glow: 0 0 20px rgba(251, 146, 60, var(--glow-intensity));
+  
+  --temp-text: #fed7aa;
+  --temp-text-contrast: #9a3412;
+}
+
+/* MUY CALIENTE: >30°C - Rojos y magentas intensos */
+[data-temp-range="hot"] {
+  --temp-primary: #dc2626;
+  --temp-secondary: #ef4444;
+  --temp-accent: #f87171;
+  
+  --temp-gradient: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%);
+  --temp-gradient-intense: linear-gradient(135deg, #7f1d1d 0%, #dc2626 50%, #ef4444 100%);
+  --temp-card-bg: linear-gradient(145deg, rgba(220, 38, 38, 0.15) 0%, rgba(239, 68, 68, 0.1) 100%);
+  
+  --temp-border: rgba(248, 113, 113, 0.4);
+  --temp-shadow: 0 8px 32px rgba(220, 38, 38, 0.35);
+  --temp-glow: 0 0 25px rgba(248, 113, 113, var(--glow-intensity));
+  
+  --temp-text: #fecaca;
+  --temp-text-contrast: #7f1d1d;
+}
+
+/* DARK MODE - Ajustes para mejor contraste */
+[data-dark-mode="true"][data-temp-range="very-cold"] {
+  --temp-card-bg: linear-gradient(145deg, rgba(30, 58, 138, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
+  --temp-border: rgba(96, 165, 250, 0.6);
+  --glow-intensity: 0.5;
+}
+
+[data-dark-mode="true"][data-temp-range="cold"] {
+  --temp-card-bg: linear-gradient(145deg, rgba(14, 165, 233, 0.22) 0%, rgba(56, 189, 248, 0.12) 100%);
+  --temp-border: rgba(125, 211, 252, 0.5);
+  --glow-intensity: 0.4;
+}
+
+[data-dark-mode="true"][data-temp-range="mild"] {
+  --temp-card-bg: linear-gradient(145deg, rgba(5, 150, 105, 0.22) 0%, rgba(16, 185, 129, 0.12) 100%);
+  --temp-border: rgba(52, 211, 153, 0.5);
+  --glow-intensity: 0.4;
+}
+
+[data-dark-mode="true"][data-temp-range="warm"] {
+  --temp-card-bg: linear-gradient(145deg, rgba(234, 88, 12, 0.22) 0%, rgba(249, 115, 22, 0.12) 100%);
+  --temp-border: rgba(251, 146, 60, 0.6);
+  --glow-intensity: 0.5;
+}
+
+[data-dark-mode="true"][data-temp-range="hot"] {
+  --temp-card-bg: linear-gradient(145deg, rgba(220, 38, 38, 0.25) 0%, rgba(239, 68, 68, 0.15) 100%);
+  --temp-border: rgba(248, 113, 113, 0.6);
+  --glow-intensity: 0.6;
+}
+
+/* CLASES UTILITARIAS PARA COMPONENTES */
+
+/* Temperatura principal - Máxima jerarquía */
+.temp-display-primary {
+  background: var(--temp-gradient-intense) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  font-size: 5rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  transition: var(--temp-transition) !important;
+}
+
+/* Cards de temperatura - Segunda jerarquía */
+.temp-card-primary {
+  background: var(--temp-card-bg) !important;
+  border: var(--border-width) solid var(--temp-border) !important;
+  box-shadow: var(--temp-shadow), var(--temp-glow) !important;
+  backdrop-filter: blur(12px) !important;
+  transition: var(--temp-transition) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.temp-card-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--temp-gradient);
+  opacity: 0.8;
+  transition: var(--temp-transition);
+}
+
+.temp-card-primary:hover {
+  transform: translateY(-6px) scale(1.02) !important;
+  box-shadow: var(--temp-shadow), var(--temp-glow), 0 16px 48px rgba(0,0,0,0.15) !important;
+  border-color: var(--temp-accent) !important;
+}
+
+/* Cards secundarias - Información de apoyo */
+.temp-card-secondary {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid var(--temp-border) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1) !important;
+  backdrop-filter: blur(8px) !important;
+  transition: var(--temp-transition) !important;
+}
+
+.temp-card-secondary:hover {
+  background: var(--temp-card-bg) !important;
+  border-color: var(--temp-accent) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Texto con contraste dinámico */
+.temp-text-primary {
+  color: var(--temp-text) !important;
+  font-weight: 600 !important;
+  transition: var(--temp-transition) !important;
+}
+
+.temp-text-contrast {
+  color: var(--temp-text-contrast) !important;
+  font-weight: 700 !important;
+  transition: var(--temp-transition) !important;
+}
+
+/* Badges y chips de temperatura */
+.temp-badge {
+  background: var(--temp-gradient) !important;
+  color: white !important;
+  padding: 4px 12px !important;
+  border-radius: 20px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  box-shadow: var(--temp-glow) !important;
+  transition: var(--temp-transition) !important;
+}
+
+/* Bordes destacados para jerarquía */
+.temp-border-accent {
+  border-left: 4px solid var(--temp-accent) !important;
+  padding-left: 16px !important;
+  transition: var(--temp-transition) !important;
+}
+
+/* Efectos de hover para interactividad */
+.temp-interactive:hover {
+  box-shadow: var(--temp-glow) !important;
+  border-color: var(--temp-accent) !important;
+  transform: translateY(-1px) !important;
+}

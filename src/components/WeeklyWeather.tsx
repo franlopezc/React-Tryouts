@@ -1,27 +1,26 @@
-import { Box, Typography } from '@mui/material';
-import { WeatherDay as WeatherDayType } from '../helpers/interfaceHelper';
-import WeatherDay from './WeatherDay';
+import { Box, Typography, useTheme } from '@mui/material';
+import { ProcessedWeatherDay } from '../types/weather';
+import DayCard from './DayCard';
 
 interface WeeklyWeatherProps {
-  days: WeatherDayType[];
+  days: ProcessedWeatherDay[];
 }
 
-// Componente para mostrar el pronóstico semanal de forma organizada
 export default function WeeklyWeather({ days }: WeeklyWeatherProps) {
-  // Mostrar solo los próximos 7 días
+  const theme = useTheme();
   const weekDays = days.slice(0, 7);
   
   return (
     <Box sx={{ mb: 4 }}>
       <Typography 
         variant="h5" 
+        className="text-accessible-primary"
         sx={{ 
           mb: 3, 
-          fontWeight: 600,
-          color: 'text.primary' 
+          fontWeight: 600
         }}
       >
-        Pronóstico de 7 días
+        📅 Pronóstico de 7 días
       </Typography>
       
       <Box
@@ -34,21 +33,24 @@ export default function WeeklyWeather({ days }: WeeklyWeatherProps) {
             height: 8,
           },
           '&::-webkit-scrollbar-track': {
-            backgroundColor: 'grey.200',
+            backgroundColor: theme.palette.grey[200],
             borderRadius: 4,
           },
           '&::-webkit-scrollbar-thumb': {
-            backgroundColor: 'primary.main',
+            backgroundColor: theme.palette.primary.main,
             borderRadius: 4,
             '&:hover': {
-              backgroundColor: 'primary.dark',
+              backgroundColor: theme.palette.primary.dark,
             },
           },
         }}
       >
         {weekDays.map((day, index) => (
-          <Box key={day.datetime} sx={{ flexShrink: 0 }}>
-            <WeatherDay day={day} dayIndex={index} />
+          <Box key={day.datetimeEpoch} sx={{ flexShrink: 0 }}>
+            <DayCard 
+              day={day} 
+              isToday={index === 0}
+            />
           </Box>
         ))}
       </Box>

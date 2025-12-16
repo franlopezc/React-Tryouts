@@ -1,15 +1,33 @@
-import { Box, Typography, Card, CardContent, Grid, Divider } from '@mui/material';
-import { WeatherData, WeatherHour } from '../helpers/interfaceHelper';
+import { Box, Typography, Card, CardContent, Grid } from '@mui/material';
+import { ProcessedWeatherData } from '../types/weather';
 import { renderWeatherIcon } from '../helpers/weatherFunctionHelper';
+import { useWeatherTheme } from '../hooks/useWeatherTheme';
+import { getTemperatureClass } from '../utils/temperatureColors';
+import HourlyWeather from './HourlyWeather';
+import WeeklyWeather from './WeeklyWeather';
 
 interface WeatherSummaryProps {
-  weatherData: WeatherData;
-  currentWeather: WeatherHour;
+  weatherData: ProcessedWeatherData;
 }
 
 // Componente para mostrar el resumen principal del clima actual con información destacada
-export default function WeatherSummary({ weatherData, currentWeather }: WeatherSummaryProps) {
+export default function WeatherSummary({ weatherData }: WeatherSummaryProps) {
   const currentDay = weatherData.days[0];
+  const currentWeather = currentDay.hours[0] || {
+    temp: weatherData.temp,
+    feelslike: weatherData.feelslike,
+    humidity: weatherData.humidity,
+    windspeed: weatherData.windspeed,
+    pressure: weatherData.pressure,
+    conditions: weatherData.conditions,
+    icon: weatherData.icon
+  };
+  
+  // Aplicar tema dinámico basado en el clima
+  useWeatherTheme(currentWeather.conditions, currentWeather.temp);
+  
+  // Obtener clase de temperatura para fondos
+  const tempClass = getTemperatureClass(currentWeather.temp);
   
   const formatDate = (datetime: string) => {
     return new Date(datetime).toLocaleDateString('es-ES', {
@@ -21,20 +39,22 @@ export default function WeatherSummary({ weatherData, currentWeather }: WeatherS
   };
 
   return (
-    <Card
-      sx={{
-        mb: 4,
-        background: 'linear-gradient(135deg, #04AEFF 0%, #0288D1 100%)',
-        color: 'white',
-        boxShadow: '0 8px 32px rgba(4, 174, 255, 0.3)',
-      }}
-    >
+    <>
+    <Card className={`temp-bg-card ${tempClass}`}>
       <CardContent sx={{ p: 4 }}>
         <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
+          <Typography 
+            variant="h4" 
+            className="text-accessible-primary"
+            sx={{ fontWeight: 'bold', mb: 1 }}
+          >
             {weatherData.address}
           </Typography>
-          <Typography variant="subtitle1" sx={{ opacity: 0.9, textTransform: 'capitalize' }}>
+          <Typography 
+            variant="subtitle1" 
+            className="text-accessible-secondary"
+            sx={{ textTransform: 'capitalize' }}
+          >
             {formatDate(currentDay.datetime)}
           </Typography>
         </Box>
@@ -45,13 +65,25 @@ export default function WeatherSummary({ weatherData, currentWeather }: WeatherS
               <Box sx={{ mb: 2 }}>
                 {renderWeatherIcon(currentWeather.icon)}
               </Box>
-              <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 1 }}>
+              <Typography 
+                variant="h2" 
+                className="text-accessible-primary"
+                sx={{ fontWeight: 'bold', mb: 1 }}
+              >
                 {Math.round(currentWeather.temp)}°C
               </Typography>
-              <Typography variant="h6" sx={{ opacity: 0.9, textTransform: 'capitalize' }}>
+              <Typography 
+                variant="h6" 
+                className="text-accessible-secondary"
+                sx={{ textTransform: 'capitalize' }}
+              >
                 {currentWeather.conditions}
               </Typography>
-              <Typography variant="body1" sx={{ opacity: 0.8, mt: 1 }}>
+              <Typography 
+                variant="body1" 
+                className="text-accessible-muted"
+                sx={{ mt: 1 }}
+              >
                 Sensación térmica: {Math.round(currentWeather.feelslike)}°C
               </Typography>
             </Box>
@@ -59,50 +91,54 @@ export default function WeatherSummary({ weatherData, currentWeather }: WeatherS
 
           <Grid item xs={12} md={6}>
             <Box sx={{ pl: { md: 2 } }}>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+              <Typography 
+                variant="h6" 
+                className="text-accessible-primary"
+                sx={{ mb: 2, fontWeight: 600 }}
+              >
                 Condiciones actuales
               </Typography>
               
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Box>
-                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                  <Box className={`temp-bg-card-secondary temp-interactive ${tempClass}-secondary`} sx={{ p: 2, borderRadius: 2 }}>
+                    <Typography variant="body2" className="text-accessible-muted">
                       Máxima del día
                     </Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                      {Math.round(currentDay.temp)}°C
+                    <Typography variant="h6" className="text-accessible-primary">
+                      {Math.round(currentDay.tempmax)}°C
                     </Typography>
                   </Box>
                 </Grid>
                 
                 <Grid item xs={6}>
-                  <Box>
-                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                  <Box className={`temp-bg-card-secondary temp-interactive ${tempClass}-secondary`} sx={{ p: 2, borderRadius: 2 }}>
+                    <Typography variant="body2" className="text-accessible-muted">
                       Humedad
                     </Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    <Typography variant="h6" className="text-accessible-primary">
                       {Math.round(currentWeather.humidity)}%
                     </Typography>
                   </Box>
                 </Grid>
                 
                 <Grid item xs={6}>
-                  <Box>
-                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                  <Box className={`temp-bg-card-secondary temp-interactive ${tempClass}-secondary`} sx={{ p: 2, borderRadius: 2 }}>
+                    <Typography variant="body2" className="text-accessible-muted">
                       Viento
                     </Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    <Typography variant="h6" className="text-accessible-primary">
                       {Math.round(currentWeather.windspeed)} km/h
                     </Typography>
                   </Box>
                 </Grid>
                 
                 <Grid item xs={6}>
-                  <Box>
-                    <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                  <Box className={`temp-bg-card-secondary temp-interactive ${tempClass}-secondary`} sx={{ p: 2, borderRadius: 2 }}>
+                    <Typography variant="body2" className="text-accessible-muted">
                       Presión
                     </Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    <Typography variant="h6" className="text-accessible-primary">
                       {Math.round(currentWeather.pressure)} hPa
                     </Typography>
                   </Box>
@@ -113,5 +149,17 @@ export default function WeatherSummary({ weatherData, currentWeather }: WeatherS
         </Grid>
       </CardContent>
     </Card>
+    
+    <Box sx={{ mt: 4 }}>
+      <HourlyWeather 
+        hours={currentDay.hours} 
+        currentHour={new Date().getHours()}
+      />
+    </Box>
+    
+    <Box sx={{ mt: 4 }}>
+      <WeeklyWeather days={weatherData.days} />
+    </Box>
+    </>
   );
 }

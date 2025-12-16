@@ -1,9 +1,9 @@
 import { Box, Typography, useTheme, useMediaQuery } from '@mui/material';
-import { WeatherHour } from '../helpers/interfaceHelper';
+import { ProcessedWeatherHour } from '../types/weather';
 import WeatherCard from './WeatherCard';
 
 interface HourlyWeatherProps {
-  hours: WeatherHour[];
+  hours: ProcessedWeatherHour[];
   currentHour: number;
 }
 
@@ -19,10 +19,10 @@ export default function HourlyWeather({ hours, currentHour }: HourlyWeatherProps
     <Box sx={{ mb: 4 }}>
       <Typography 
         variant="h5" 
+        className="text-accessible-primary"
         sx={{ 
           mb: 3, 
-          fontWeight: 600,
-          color: theme.palette.text.primary 
+          fontWeight: 600
         }}
       >
         Pronóstico por horas

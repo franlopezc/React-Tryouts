@@ -1,6 +1,6 @@
 @import './styles/designTokens.css';
 @import './styles/dynamicThemes.css';
-@import './styles/temperatureThemes.css';
+@import './styles/backgroundThemes.css';
 
 :root {
   font-family: var(--font-family);

@@ -1,0 +1,215 @@
+/* Sistema de Fondos y Bordes Dinámicos por Temperatura */
+
+/* Variables base para transiciones y accesibilidad */
+:root {
+  --bg-transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --border-width: 2px;
+  --card-opacity: 0.95;
+  
+  /* Colores de texto accesibles - NUNCA cambian */
+  --text-primary-accessible: #1a202c;
+  --text-secondary-accessible: #4a5568;
+  --text-muted-accessible: #718096;
+  --text-contrast-accessible: #ffffff;
+}
+
+/* MUY FRÍO: < 0°C - Azules intensos */
+[data-temp-range="very-cold"] {
+  /* Fondos con gradientes azules intensos */
+  --temp-bg-primary: linear-gradient(135deg, rgba(30, 58, 138, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
+  --temp-bg-secondary: linear-gradient(145deg, rgba(30, 58, 138, 0.08) 0%, rgba(96, 165, 250, 0.05) 100%);
+  --temp-bg-header: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(96, 165, 250, 0.15) 100%);
+  
+  /* Bordes azules con intensidad media */
+  --temp-border-primary: rgba(96, 165, 250, 0.4);
+  --temp-border-secondary: rgba(59, 130, 246, 0.3);
+  --temp-border-accent: rgba(30, 58, 138, 0.5);
+  
+  /* Sombras frías */
+  --temp-shadow: 0 8px 32px rgba(30, 58, 138, 0.15);
+  --temp-shadow-hover: 0 12px 48px rgba(59, 130, 246, 0.2);
+}
+
+/* FRÍO: 0-10°C - Azules medios */
+[data-temp-range="cold"] {
+  --temp-bg-primary: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(56, 189, 248, 0.08) 100%);
+  --temp-bg-secondary: linear-gradient(145deg, rgba(14, 165, 233, 0.06) 0%, rgba(125, 211, 252, 0.04) 100%);
+  --temp-bg-header: linear-gradient(135deg, rgba(56, 189, 248, 0.18) 0%, rgba(125, 211, 252, 0.12) 100%);
+  
+  --temp-border-primary: rgba(125, 211, 252, 0.35);
+  --temp-border-secondary: rgba(56, 189, 248, 0.25);
+  --temp-border-accent: rgba(14, 165, 233, 0.4);
+  
+  --temp-shadow: 0 8px 32px rgba(14, 165, 233, 0.12);
+  --temp-shadow-hover: 0 12px 48px rgba(56, 189, 248, 0.18);
+}
+
+/* TEMPLADO: 10-20°C - Verdes y turquesas */
+[data-temp-range="mild"] {
+  --temp-bg-primary: linear-gradient(135deg, rgba(5, 150, 105, 0.12) 0%, rgba(16, 185, 129, 0.08) 100%);
+  --temp-bg-secondary: linear-gradient(145deg, rgba(5, 150, 105, 0.06) 0%, rgba(52, 211, 153, 0.04) 100%);
+  --temp-bg-header: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(52, 211, 153, 0.12) 100%);
+  
+  --temp-border-primary: rgba(52, 211, 153, 0.35);
+  --temp-border-secondary: rgba(16, 185, 129, 0.25);
+  --temp-border-accent: rgba(5, 150, 105, 0.4);
+  
+  --temp-shadow: 0 8px 32px rgba(5, 150, 105, 0.12);
+  --temp-shadow-hover: 0 12px 48px rgba(16, 185, 129, 0.18);
+}
+
+/* CALIENTE: 20-30°C - Naranjas cálidos */
+[data-temp-range="warm"] {
+  --temp-bg-primary: linear-gradient(135deg, rgba(234, 88, 12, 0.12) 0%, rgba(249, 115, 22, 0.08) 100%);
+  --temp-bg-secondary: linear-gradient(145deg, rgba(234, 88, 12, 0.06) 0%, rgba(251, 146, 60, 0.04) 100%);
+  --temp-bg-header: linear-gradient(135deg, rgba(249, 115, 22, 0.18) 0%, rgba(251, 146, 60, 0.12) 100%);
+  
+  --temp-border-primary: rgba(251, 146, 60, 0.4);
+  --temp-border-secondary: rgba(249, 115, 22, 0.3);
+  --temp-border-accent: rgba(234, 88, 12, 0.5);
+  
+  --temp-shadow: 0 8px 32px rgba(234, 88, 12, 0.15);
+  --temp-shadow-hover: 0 12px 48px rgba(249, 115, 22, 0.2);
+}
+
+/* MUY CALIENTE: >30°C - Rojos intensos */
+[data-temp-range="hot"] {
+  --temp-bg-primary: linear-gradient(135deg, rgba(220, 38, 38, 0.15) 0%, rgba(239, 68, 68, 0.1) 100%);
+  --temp-bg-secondary: linear-gradient(145deg, rgba(220, 38, 38, 0.08) 0%, rgba(248, 113, 113, 0.05) 100%);
+  --temp-bg-header: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(248, 113, 113, 0.15) 100%);
+  
+  --temp-border-primary: rgba(248, 113, 113, 0.4);
+  --temp-border-secondary: rgba(239, 68, 68, 0.3);
+  --temp-border-accent: rgba(220, 38, 38, 0.5);
+  
+  --temp-shadow: 0 8px 32px rgba(220, 38, 38, 0.18);
+  --temp-shadow-hover: 0 12px 48px rgba(239, 68, 68, 0.25);
+}
+
+/* DARK MODE - Intensidades aumentadas manteniendo accesibilidad */
+[data-dark-mode="true"][data-temp-range="very-cold"] {
+  --temp-bg-primary: linear-gradient(135deg, rgba(30, 58, 138, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
+  --temp-bg-header: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(96, 165, 250, 0.2) 100%);
+  --temp-border-primary: rgba(96, 165, 250, 0.6);
+  --temp-shadow: 0 8px 32px rgba(30, 58, 138, 0.25);
+}
+
+[data-dark-mode="true"][data-temp-range="cold"] {
+  --temp-bg-primary: linear-gradient(135deg, rgba(14, 165, 233, 0.22) 0%, rgba(56, 189, 248, 0.12) 100%);
+  --temp-bg-header: linear-gradient(135deg, rgba(56, 189, 248, 0.28) 0%, rgba(125, 211, 252, 0.18) 100%);
+  --temp-border-primary: rgba(125, 211, 252, 0.5);
+  --temp-shadow: 0 8px 32px rgba(14, 165, 233, 0.2);
+}
+
+[data-dark-mode="true"][data-temp-range="mild"] {
+  --temp-bg-primary: linear-gradient(135deg, rgba(5, 150, 105, 0.22) 0%, rgba(16, 185, 129, 0.12) 100%);
+  --temp-bg-header: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(52, 211, 153, 0.18) 100%);
+  --temp-border-primary: rgba(52, 211, 153, 0.5);
+  --temp-shadow: 0 8px 32px rgba(5, 150, 105, 0.2);
+}
+
+[data-dark-mode="true"][data-temp-range="warm"] {
+  --temp-bg-primary: linear-gradient(135deg, rgba(234, 88, 12, 0.22) 0%, rgba(249, 115, 22, 0.12) 100%);
+  --temp-bg-header: linear-gradient(135deg, rgba(249, 115, 22, 0.28) 0%, rgba(251, 146, 60, 0.18) 100%);
+  --temp-border-primary: rgba(251, 146, 60, 0.6);
+  --temp-shadow: 0 8px 32px rgba(234, 88, 12, 0.25);
+}
+
+[data-dark-mode="true"][data-temp-range="hot"] {
+  --temp-bg-primary: linear-gradient(135deg, rgba(220, 38, 38, 0.25) 0%, rgba(239, 68, 68, 0.15) 100%);
+  --temp-bg-header: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(248, 113, 113, 0.2) 100%);
+  --temp-border-primary: rgba(248, 113, 113, 0.6);
+  --temp-shadow: 0 8px 32px rgba(220, 38, 38, 0.3);
+}
+
+/* CLASES PARA APLICAR A COMPONENTES */
+
+/* Card principal con fondo y borde dinámico */
+.temp-bg-card {
+  background: var(--temp-bg-primary) !important;
+  border: var(--border-width) solid var(--temp-border-primary) !important;
+  box-shadow: var(--temp-shadow) !important;
+  backdrop-filter: blur(10px) !important;
+  transition: var(--bg-transition) !important;
+}
+
+.temp-bg-card:hover {
+  box-shadow: var(--temp-shadow-hover) !important;
+  border-color: var(--temp-border-accent) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Card secundaria con fondo sutil */
+.temp-bg-card-secondary {
+  background: var(--temp-bg-secondary) !important;
+  border: 1px solid var(--temp-border-secondary) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08) !important;
+  backdrop-filter: blur(8px) !important;
+  transition: var(--bg-transition) !important;
+}
+
+.temp-bg-card-secondary:hover {
+  background: var(--temp-bg-primary) !important;
+  border-color: var(--temp-border-primary) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Header con fondo destacado */
+.temp-bg-header {
+  background: var(--temp-bg-header) !important;
+  border: var(--border-width) solid var(--temp-border-accent) !important;
+  box-shadow: var(--temp-shadow) !important;
+  backdrop-filter: blur(12px) !important;
+  transition: var(--bg-transition) !important;
+}
+
+/* Textos siempre accesibles - NUNCA cambian de color */
+.text-accessible-primary {
+  color: var(--text-primary-accessible) !important;
+  font-weight: 600 !important;
+}
+
+.text-accessible-secondary {
+  color: var(--text-secondary-accessible) !important;
+  font-weight: 500 !important;
+}
+
+.text-accessible-muted {
+  color: var(--text-muted-accessible) !important;
+  font-weight: 400 !important;
+}
+
+.text-accessible-contrast {
+  color: var(--text-contrast-accessible) !important;
+  font-weight: 600 !important;
+}
+
+/* Dark mode - textos claros pero accesibles */
+[data-dark-mode="true"] .text-accessible-primary {
+  color: #f7fafc !important;
+}
+
+[data-dark-mode="true"] .text-accessible-secondary {
+  color: #e2e8f0 !important;
+}
+
+[data-dark-mode="true"] .text-accessible-muted {
+  color: #cbd5e1 !important;
+}
+
+/* Bordes de acento para jerarquía */
+.temp-border-left {
+  border-left: 4px solid var(--temp-border-accent) !important;
+  padding-left: 16px !important;
+}
+
+/* Efectos hover para interactividad */
+.temp-interactive {
+  cursor: pointer !important;
+  transition: var(--bg-transition) !important;
+}
+
+.temp-interactive:hover {
+  background: var(--temp-bg-primary) !important;
+  border-color: var(--temp-border-primary) !important;
+}

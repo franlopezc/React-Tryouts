@@ -79,6 +79,7 @@ export interface WeatherData {
   preciptype: string | null;
   precipprob: number;
   pressure: number;
+  resolvedAddress: string;
   temp: number;
   timezone: string;
   severerisk: number;

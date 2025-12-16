@@ -48,6 +48,16 @@ export const getTemperatureEmoji = (range: TemperatureRange): string => {
 };
 
 /**
+ * Obtiene la clase CSS para el rango de temperatura
+ * @param temperature Temperatura en Celsius
+ * @returns Clase CSS para aplicar estilos por temperatura
+ */
+export const getTemperatureClass = (temperature: number): string => {
+  const range = getTemperatureRange(temperature);
+  return `temp-${range}`;
+};
+
+/**
  * Aplica el rango de temperatura al documento para CSS dinámico
  * @param temperature Temperatura en Celsius
  */

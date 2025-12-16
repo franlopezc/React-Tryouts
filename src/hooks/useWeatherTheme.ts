@@ -43,59 +43,47 @@ const getWeatherTheme = (icon: string): WeatherTheme => {
   }
 };
 
-/**
- * Determina si debe activarse dark mode según clima y hora
- */
-const shouldUseDarkMode = (weatherData: ProcessedWeatherData): boolean => {
-  const currentHour = new Date().getHours();
-  const isNightTime = currentHour < 6 || currentHour > 20;
-  
-  // Dark mode automático para clima tormentoso
-  if (weatherData.days[0]?.icon.includes('thunder')) {
-    return true;
-  }
-  
-  // Dark mode para noche o clima severo
-  if (isNightTime || weatherData.days[0]?.icon.includes('storm')) {
-    return true;
-  }
-  
-  return false;
-};
+
 
 /**
- * Hook para aplicar theme dinámico según datos meteorológicos
+ * Hook para aplicar theme dinámico según condiciones meteorológicas
  */
-export const useWeatherTheme = (weatherData: ProcessedWeatherData | null) => {
+export const useWeatherTheme = (conditions: string, temperature: number) => {
   useEffect(() => {
-    if (!weatherData) {
+    if (!conditions) {
       // Theme por defecto
       document.documentElement.setAttribute('data-weather-theme', 'cloudy');
       document.documentElement.setAttribute('data-dark-mode', 'false');
       return;
     }
 
-    const currentWeather = weatherData.days[0];
-    if (!currentWeather) return;
+    // Determinar theme basado en condiciones
+    const theme = conditions.toLowerCase().includes('rain') ? 'rainy' :
+                 conditions.toLowerCase().includes('storm') ? 'stormy' :
+                 conditions.toLowerCase().includes('snow') ? 'snowy' :
+                 conditions.toLowerCase().includes('clear') ? 'sunny' : 'cloudy';
 
-    const theme = getWeatherTheme(currentWeather.icon);
-    const darkMode = shouldUseDarkMode(weatherData);
+    const currentHour = new Date().getHours();
+    const isNightTime = currentHour < 6 || currentHour > 20;
+    const darkMode = isNightTime || conditions.toLowerCase().includes('storm');
 
     // Aplicar theme al documento
     document.documentElement.setAttribute('data-weather-theme', theme);
     document.documentElement.setAttribute('data-dark-mode', darkMode.toString());
     
-    // Aplicar theme de temperatura basado en temperatura actual
-    const currentTemp = currentWeather.temp;
-    applyTemperatureTheme(currentTemp);
+    // Aplicar theme de temperatura
+    applyTemperatureTheme(temperature);
 
     // Smooth transition
     document.documentElement.style.transition = 'var(--theme-transition)';
 
-  }, [weatherData]);
+  }, [conditions, temperature]);
 
   return {
-    currentTheme: weatherData ? getWeatherTheme(weatherData.days[0]?.icon) : 'cloudy',
-    isDarkMode: weatherData ? shouldUseDarkMode(weatherData) : false,
+    currentTheme: conditions ? (conditions.toLowerCase().includes('rain') ? 'rainy' :
+                               conditions.toLowerCase().includes('storm') ? 'stormy' :
+                               conditions.toLowerCase().includes('snow') ? 'snowy' :
+                               conditions.toLowerCase().includes('clear') ? 'sunny' : 'cloudy') : 'cloudy',
+    isDarkMode: false,
   };
 };

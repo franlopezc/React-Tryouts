@@ -1,6 +1,6 @@
 // Página Mi Localidad - Búsqueda personalizada de localidades españolas
 
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Typography,
@@ -9,57 +9,53 @@ import {
   Card,
   CardContent,
   Fade,
-  Autocomplete,
+  Button,
   InputAdornment,
+  Alert,
 } from '@mui/material';
 import { Search as SearchIcon } from 'lucide-react';
-import { useWeather } from '../hooks/useWeather';
-import { searchSpanishLocations } from '../services/weatherService';
-import WeatherDisplay from '../components/WeatherDisplay';
+import { fetchWeatherData } from '../services/weatherService';
+import WeatherSummary from '../components/WeatherSummary';
 import LoadingSpinner from '../components/LoadingSpinner';
-import ErrorAlert from '../components/ErrorAlert';
-import { debounce } from 'lodash';
+import { ProcessedWeatherData, WeatherError } from '../types/weather';
+import { extractProvince } from '../utils/locationUtils';
 
 const MyLocationPage: React.FC = () => {
-  const [selectedLocation, setSelectedLocation] = useState<string>('');
-  const [searchOptions, setSearchOptions] = useState<string[]>([]);
-  const [searchLoading, setSearchLoading] = useState<boolean>(false);
+  const [locationInput, setLocationInput] = useState<string>('');
+  const [weatherData, setWeatherData] = useState<ProcessedWeatherData | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<WeatherError | null>(null);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
-  
-  const { data, loading, error } = useWeather(selectedLocation || null);
 
-  // Búsqueda con debounce para mejor UX
-  const debouncedSearch = useCallback(
-    debounce(async (searchTerm: string) => {
-      if (searchTerm.length < 2) {
-        setSearchOptions([]);
-        return;
-      }
+  const handleSearch = async () => {
+    if (!locationInput.trim()) return;
 
-      setSearchLoading(true);
-      try {
-        const results = await searchSpanishLocations(searchTerm);
-        setSearchOptions(results);
-      } catch (err) {
-        console.error('Error searching locations:', err);
-        setSearchOptions([]);
-      } finally {
-        setSearchLoading(false);
-      }
-    }, 300),
-    []
-  );
+    setLoading(true);
+    setError(null);
+    setHasSearched(true);
 
-  const handleLocationChange = (event: React.SyntheticEvent, value: string | null) => {
-    setSelectedLocation(value || '');
-    if (value) {
-      setHasSearched(true);
+    try {
+      const data = await fetchWeatherData(locationInput.trim());
+      setWeatherData(data);
+    } catch (err) {
+      setWeatherData(null);
+      setError({ 
+        message: 'No se encuentra información para el domicilio introducido' 
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleInputChange = (event: React.SyntheticEvent, value: string) => {
-    debouncedSearch(value);
+
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLocationInput(event.target.value);
+    if (error && hasSearched) {
+      setError(null);
+    }
   };
+
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -89,51 +85,52 @@ const MyLocationPage: React.FC = () => {
             </Typography>
             
             <Box sx={{ maxWidth: 500, mx: 'auto' }}>
-              <Autocomplete
-                options={searchOptions}
-                loading={searchLoading}
-                onInputChange={handleInputChange}
-                onChange={handleLocationChange}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Buscar localidad en España"
-                    variant="outlined"
-                    fullWidth
-                    placeholder="Ej: Salamanca, Toledo, Cuenca..."
-                    InputProps={{
-                      ...params.InputProps,
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchIcon size={20} />
-                        </InputAdornment>
-                      ),
-                    }}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                        borderRadius: 'var(--radius-lg)',
-                      },
-                    }}
-                  />
-                )}
-                renderOption={(props, option) => (
-                  <Box component="li" {...props}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <span>📍</span>
-                      <span>{option}</span>
-                    </Box>
-                  </Box>
-                )}
-                noOptionsText="No se encontraron localidades"
-                loadingText="Buscando..."
-              />
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <TextField
+                  label="Buscar localidad"
+                  variant="outlined"
+                  fullWidth
+                  value={locationInput}
+                  onChange={handleInputChange}
+                  placeholder="Ej: Madrid, Barcelona, Calle Mayor 1..."
+                  disabled={loading}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon size={20} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      borderRadius: 'var(--radius-lg)',
+                    },
+                  }}
+                />
+                <Button
+                  variant="contained"
+                  onClick={handleSearch}
+                  disabled={loading || !locationInput.trim()}
+                  sx={{
+                    minWidth: 120,
+                    borderRadius: 'var(--radius-lg)',
+                    textTransform: 'none',
+                    fontWeight: 600,
+                  }}
+                >
+                  {loading ? 'Buscando...' : 'Buscar'}
+                </Button>
+              </Box>
             </Box>
 
-            {selectedLocation && (
+            {weatherData && (
               <Box sx={{ mt: 2 }}>
                 <Typography variant="body2" color="text.secondary">
-                  Mostrando clima para: <strong>{selectedLocation}</strong>
+                  Mostrando clima para: <strong>{weatherData.address}</strong>
+                  {extractProvince(weatherData.resolvedAddress) && (
+                    <span> - {extractProvince(weatherData.resolvedAddress)}</span>
+                  )}
                 </Typography>
               </Box>
             )}
@@ -141,28 +138,40 @@ const MyLocationPage: React.FC = () => {
         </Card>
       </Box>
 
-      {loading && hasSearched && <LoadingSpinner message="Obteniendo datos meteorológicos..." />}
-      
-      {error && hasSearched && (
-        <ErrorAlert 
-          message={error.message}
-          onRetry={() => window.location.reload()} 
-        />
+      {loading && hasSearched && (
+        <LoadingSpinner message="Buscando información meteorológica..." />
       )}
       
-      <Fade in={!!data && !loading && hasSearched} timeout={500}>
+      {error && hasSearched && !loading && (
+        <Box sx={{ mb: 4 }}>
+          <Alert 
+            severity="info" 
+            sx={{ 
+              borderRadius: 'var(--radius-lg)',
+              '& .MuiAlert-message': {
+                fontSize: '1rem',
+                fontWeight: 500,
+              }
+            }}
+          >
+            {error.message}
+          </Alert>
+        </Box>
+      )}
+      
+      <Fade in={!!weatherData && !loading && hasSearched} timeout={500}>
         <Box>
-          {data && <WeatherDisplay weatherData={data} />}
+          {weatherData && <WeatherSummary weatherData={weatherData} />}
         </Box>
       </Fade>
 
       {!hasSearched && (
         <Box sx={{ textAlign: 'center', py: 8 }}>
           <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
-            🔍 Busca una localidad para comenzar
+            🔍 Busca cualquier localidad
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Escribe el nombre de cualquier pueblo o ciudad española
+            Escribe el nombre de una ciudad, pueblo o dirección
           </Typography>
         </Box>
       )}

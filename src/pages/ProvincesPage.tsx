@@ -15,9 +15,10 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import { useWeather } from '../hooks/useWeather';
-import WeatherDisplay from '../components/WeatherDisplay';
+import WeatherSummary from '../components/WeatherSummary';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorAlert from '../components/ErrorAlert';
+import { extractProvince } from '../utils/locationUtils';
 
 const SPANISH_CITIES = [
   'Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Zaragoza', 'Málaga',
@@ -93,6 +94,14 @@ const ProvincesPage: React.FC = () => {
                 </Select>
               </FormControl>
             </Box>
+            
+            {selectedCity && (
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="body2" color="text.secondary">
+                  Ciudad seleccionada: <strong>{selectedCity}</strong>
+                </Typography>
+              </Box>
+            )}
           </CardContent>
         </Card>
       </Box>
@@ -108,7 +117,18 @@ const ProvincesPage: React.FC = () => {
       
       <Fade in={!!data && !loading} timeout={500}>
         <Box>
-          {data && <WeatherDisplay weatherData={data} />}
+          {data && (
+            <>
+              {extractProvince(data.address) && (
+                <Box sx={{ mb: 2, textAlign: 'center' }}>
+                  <Typography variant="body2" color="text.secondary">
+                    📍 Provincia: <strong>{extractProvince(data.address)}</strong>
+                  </Typography>
+                </Box>
+              )}
+              <WeatherSummary weatherData={data} />
+            </>
+          )}
         </Box>
       </Fade>
     </Container>
